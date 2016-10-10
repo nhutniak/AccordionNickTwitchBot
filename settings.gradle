@@ -1,0 +1,3 @@
+include ':Twitch-Bot-Library'
+
+project(':Twitch-Bot-Library').projectDir = new File(settingsDir, '../Twitch-Bot-Library')
