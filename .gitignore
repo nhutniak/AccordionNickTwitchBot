@@ -1,0 +1,10 @@
+/.gradle/
+/bin/
+/build/
+derbyDB/
+.classpath
+.project
+.settings/
+followers.txt
+viewers.txt
+derby.log
