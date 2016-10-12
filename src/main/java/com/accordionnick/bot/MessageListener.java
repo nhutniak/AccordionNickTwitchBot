@@ -39,7 +39,7 @@ public class MessageListener extends ListenerAdapter
 		
 		if( message.startsWith("!") && !processed ) // Check to see if this user has permission to invalid commands?
 		{
-			event.respond( " that isn't a valid command" );
+//			event.respond( " that isn't a valid command" );
 		}
 	}
 }

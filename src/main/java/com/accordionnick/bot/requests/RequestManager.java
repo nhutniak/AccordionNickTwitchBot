@@ -42,7 +42,7 @@ public class RequestManager extends Database
 	{
 		try
 		{
-			PreparedStatement ps= m_dbConnection.prepareStatement("insert into " + TABLE_NAME + " (user_name, song_name, state) VALUES(?,?,?)");
+			PreparedStatement ps= m_dbConnection.prepareStatement("insert into " + TABLE_NAME + " (user_name, song_name, state) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, request.getUsername());
 			ps.setString(2, request.value());
 			ps.setString(3, State.REQUEST.toString());
@@ -51,8 +51,9 @@ public class RequestManager extends Database
 			ResultSet generatedKeys = ps.getGeneratedKeys();
 			if( 1 == rowsChanged )
 			{
+				generatedKeys.next();
 				// Success
-				int id = generatedKeys.getInt(0);
+				int id = generatedKeys.getInt(1);
 				request = new Request(id, request);
 			}
 			else
