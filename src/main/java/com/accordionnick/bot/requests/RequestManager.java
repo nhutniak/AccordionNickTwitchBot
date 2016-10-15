@@ -104,6 +104,7 @@ public class RequestManager extends Database
 			m_log.error("Failed to set current song", e);
 			return false;
 		}
+		saveCurrentSong( request.value() );
 		
 		return true;
 	}
@@ -208,7 +209,7 @@ public class RequestManager extends Database
 	private void updateFiles(Queue<Request> requestQueue)
 	{
 		saveRequests(requestQueue);
-		saveCurrentSong();
+		saveCurrentSong( null == m_lastRequest ? null : m_lastRequest.value() );
 	}
 	
 	private void saveRequests(Queue<Request> requestQueue)
@@ -235,18 +236,18 @@ public class RequestManager extends Database
 	}
 	
 	
-	private void saveCurrentSong()
+	private void saveCurrentSong( String lastRequest )
 	{
 		try
 		{
 			PrintWriter writer = new PrintWriter(CURRENT_SONG, "UTF-8");
-			if( null == m_lastRequest )
+			if( null == lastRequest )
 			{
 				writer.println( "" );
 			}
 			else
 			{
-				writer.println( "Currently playing: " + m_lastRequest.value() );
+				writer.println( "Currently playing: " + lastRequest );
 			}
 			writer.close();
 		} catch (FileNotFoundException | UnsupportedEncodingException e)
