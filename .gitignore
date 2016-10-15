@@ -8,3 +8,6 @@ derbyDB/
 followers.txt
 viewers.txt
 derby.log
+channel.properties
+currentsong.txt
+requests.txt

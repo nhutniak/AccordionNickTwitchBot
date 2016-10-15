@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -23,6 +24,7 @@ public class ViewerCountTask implements Job
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException
 	{
+		m_log.setLevel(Level.INFO);
 		StreamsResource resource =  (StreamsResource) context.getJobDetail().getJobDataMap().get(StreamsResource.class.getName());
 		
 		if( null != resource )
