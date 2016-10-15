@@ -44,4 +44,14 @@ public abstract class CommandHandler
 	{
 		event.respondPrivateMessage("You don't have access to " + commandName + ".");
 	}
+
+	protected String constructStringFrom(StringTokenizer tokenizedString)
+	{
+		StringBuilder buf = new StringBuilder();
+		while (tokenizedString.hasMoreTokens())
+		{
+			buf.append( tokenizedString.nextToken() );
+		}
+		return buf.toString();
+	}
 }

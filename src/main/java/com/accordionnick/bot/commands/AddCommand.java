@@ -21,12 +21,7 @@ public class AddCommand extends CommandHandler
 	{
 		if( isAdmin(event) )
 		{
-			String assembledString = "";
-			while (tokenizedString.hasMoreTokens())
-			{
-				// FIXME: don't string concat
-				assembledString += tokenizedString.nextToken();
-			}
+			String assembledString = constructStringFrom(tokenizedString);
 			m_log.info("Received request to add command: " + assembledString);
 	
 			event.respond("Processed request for command..." + assembledString);

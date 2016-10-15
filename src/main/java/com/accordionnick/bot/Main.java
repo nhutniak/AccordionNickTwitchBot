@@ -18,6 +18,7 @@ import org.quartz.TriggerBuilder;
 
 import com.accordionnick.bot.channel.ChannelHandler;
 import com.accordionnick.bot.commands.AddCommand;
+import com.accordionnick.bot.commands.CurrentSongCommand;
 import com.accordionnick.bot.commands.DropDatabase;
 import com.accordionnick.bot.commands.LastSongCommand;
 import com.accordionnick.bot.commands.PlayCommand;
@@ -58,6 +59,7 @@ public class Main implements Shutdown
 		
 		CommandRegister commandRegister = new CommandRegister();
 		commandRegister.register(new AddCommand());
+		commandRegister.register(new CurrentSongCommand(requestManager));
 		commandRegister.register(new RequestCommand(requestManager));
 		commandRegister.register(new RequestListCommand(requestManager));
 		commandRegister.register(new PlayCommand(requestManager));

@@ -1,5 +1,8 @@
 package com.accordionnick.bot.requests;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +15,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.log4j.Logger;
+
 import com.accordionnick.bot.database.Database;
 
 
@@ -20,8 +25,16 @@ public class RequestManager extends Database
 	enum State {
 		REQUEST,
 		PLAYED,
-		CANCELLED;
+		CANCELLED,
+		SET_CURRENT,
+		;
 	}
+
+	private static final String REQUEST_FILE_NAME = "requests.txt";
+	
+	private static final String CURRENT_SONG = "currentsong.txt";
+
+	private static final Logger m_log = Logger.getLogger(RequestManager.class);
 
 	private final Queue<Request> m_requestQueue = new ConcurrentLinkedQueue<>();
 	
@@ -67,10 +80,34 @@ public class RequestManager extends Database
 		}
 		
 		m_requestQueue.add(request);
+		updateFiles(m_requestQueue);
 
 		return m_requestQueue.size();
 	}
 
+	public boolean setCurrent( Request request )
+	{
+		try
+		{
+			PreparedStatement ps= m_dbConnection.prepareStatement("insert into " + TABLE_NAME + " (user_name, song_name, state) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, request.getUsername());
+			ps.setString(2, request.value());
+			ps.setString(3, State.SET_CURRENT.toString());
+			int rowsChanged = ps.executeUpdate();
+			
+			if( 1 != rowsChanged )
+			{
+				m_log.error("Failed to insert: " + ps.toString());
+			}
+		} catch (SQLException e)
+		{
+			m_log.error("Failed to set current song", e);
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public Request next()
 	{
 		Request poll = m_requestQueue.poll();
@@ -97,6 +134,8 @@ public class RequestManager extends Database
 		}
 		
 		m_lastRequest = poll;
+		updateFiles( m_requestQueue );
+		
 		return poll;
 	}
 
@@ -164,5 +203,56 @@ public class RequestManager extends Database
 			
 			m_requestQueue.add( new Request(requestID, userName, songName) );
 		}
+	}
+	
+	private void updateFiles(Queue<Request> requestQueue)
+	{
+		saveRequests(requestQueue);
+		saveCurrentSong();
+	}
+	
+	private void saveRequests(Queue<Request> requestQueue)
+	{
+		try
+		{
+			PrintWriter writer = new PrintWriter(REQUEST_FILE_NAME, "UTF-8");
+			int count=1;
+			if( requestQueue.isEmpty() )
+			{
+				writer.println( "No requests.");
+			}
+			writer.println( "Use !req <song name or a link to sheets> to request a song!" );
+			for (Request request : requestQueue)
+			{
+				writer.println( count + " - " + request.value() );
+				count++;
+			}
+			writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e)
+		{
+			m_log.error("Couldn't write requests to file", e);
+		}
+	}
+	
+	
+	private void saveCurrentSong()
+	{
+		try
+		{
+			PrintWriter writer = new PrintWriter(CURRENT_SONG, "UTF-8");
+			if( null == m_lastRequest )
+			{
+				writer.println( "" );
+			}
+			else
+			{
+				writer.println( "Currently playing: " + m_lastRequest.value() );
+			}
+			writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e)
+		{
+			m_log.error("Couldn't write current song to file", e);
+		}
+		
 	}
 }
