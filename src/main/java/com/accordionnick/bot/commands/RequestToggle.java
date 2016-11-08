@@ -10,7 +10,7 @@ import com.accordionnick.bot.requests.RequestManager;
 public class RequestToggle extends CommandHandler
 {
 
-	private static final String REQUEST_STRING = "request";
+	private static final String REQUEST_STRING = "requests";
 	private RequestManager requestManager;
 
 	public RequestToggle(RequestManager requestManager)
@@ -29,15 +29,15 @@ public class RequestToggle extends CommandHandler
 			boolean newValue = false;
 			if( "status".equalsIgnoreCase(setTo) )
 			{
-				if( setTo.equalsIgnoreCase("true") || setTo.equalsIgnoreCase("on") )
+				newValue = requestManager.isEnabled();
+			}
+			else
+			{
+				if( "true".equalsIgnoreCase(setTo) || setTo.equalsIgnoreCase("on") )
 				{
 					newValue = true;
 				}
 				requestManager.setEnable( newValue );
-			}
-			else
-			{
-				newValue = requestManager.isEnabled();
 			}
 			String enableString = newValue ? "enabled" : "disabled";
 			

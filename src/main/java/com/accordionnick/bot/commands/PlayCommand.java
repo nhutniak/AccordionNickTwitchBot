@@ -29,7 +29,20 @@ public class PlayCommand extends CommandHandler
 			{
 				Request nextRequest = requestManager.next();
 				
-				event.respondWith( nextRequest.getUsername() + " your request for " + nextRequest.value() + " is coming up next." );
+				StringBuilder sb = new StringBuilder();
+				sb.append( nextRequest.getUsername() );
+				sb.append( " your request for " );
+				sb.append( nextRequest.value() );
+				sb.append( " is coming up next." );
+				
+				if( nextRequest.hasSongName() )
+				{
+					sb.append( " [" );
+					sb.append( nextRequest.getUrlAsString() );
+					sb.append( "]" );
+				}
+				
+				event.respondWith( sb.toString() );
 			}
 			else
 			{

@@ -24,6 +24,7 @@ import com.accordionnick.bot.commands.LastSongCommand;
 import com.accordionnick.bot.commands.PlayCommand;
 import com.accordionnick.bot.commands.RequestCommand;
 import com.accordionnick.bot.commands.RequestListCommand;
+import com.accordionnick.bot.commands.RequestToggle;
 import com.accordionnick.bot.commands.ShutdownCommand;
 import com.accordionnick.bot.requests.RequestManager;
 import com.accordionnick.bot.schedule.FollowerCountTask;
@@ -62,6 +63,7 @@ public class Main implements Shutdown
 		commandRegister.register(new CurrentSongCommand(requestManager));
 		commandRegister.register(new RequestCommand(requestManager));
 		commandRegister.register(new RequestListCommand(requestManager));
+		commandRegister.register(new RequestToggle(requestManager));
 		commandRegister.register(new PlayCommand(requestManager));
 		commandRegister.register(new LastSongCommand(requestManager));
 		commandRegister.register(new DropDatabase(conn));

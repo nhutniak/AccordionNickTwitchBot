@@ -39,11 +39,11 @@ public class RequestListCommand extends CommandHandler
 				builder.append("  ");
 			}
 			
-			event.respond("This is the current request list: " + builder.toString());
+			event.respondWith("This is the current request list: " + builder.toString());
 		}
 		else
 		{
-			event.respond("There aren't any requests.");
+			event.respondWith("There aren't any requests.");
 		}
 		
 		
