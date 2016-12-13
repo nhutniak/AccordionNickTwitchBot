@@ -11,3 +11,5 @@ derby.log
 channel.properties
 currentsong.txt
 requests.txt
+/gradle.properties
+/src/main/config
